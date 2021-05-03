@@ -4,6 +4,7 @@ import { requireAuth, validateRequest } from '@gkotickets/common';
 import { Ticket } from '../models/ticket';
 import { TicketCreatedPublisher } from '../events/publisher/ticket-created-publisher';
 import { natsWrapper } from '../nats-wrapper';
+import { version } from 'typescript';
 
 const router = express.Router();
 
@@ -31,7 +32,8 @@ async (req: Request, res: Response) => {
     id: ticket.id,
     title: ticket.title,
     price: ticket.price,
-    userId: ticket.userId
+    userId: ticket.userId,
+    version: ticket.version
   });
 
   res.status(201).send(ticket);
