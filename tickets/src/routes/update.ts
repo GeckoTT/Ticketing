@@ -2,7 +2,8 @@ import express, { Request, Response } from 'express';
 import { body } from 'express-validator';
 import { requireAuth, NotFoundError, 
   NotAuthorizedError,
-  validateRequest 
+  validateRequest, 
+  BadRequestError
 } from '@gkotickets/common';
 import { Ticket } from '../models/ticket';
 import { TicketUpdatedPublisher } from '../events/publisher/ticket-updated-publisher';
@@ -25,6 +26,10 @@ import { natsWrapper } from '../nats-wrapper';
 
   if (!ticket) {
     throw new NotFoundError();
+  }
+
+  if (ticket.orderId) {
+    throw new BadRequestError('Cannot edit a reserved ticket');
   }
 
   if (ticket.userId !== req.currentUser!.id) {
